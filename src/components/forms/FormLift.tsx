@@ -6,7 +6,7 @@ import { Checkbox, TextInput, InputWrapper, Button } from "../inputs";
 const setSchema = z.object({
   repQuantity: z.number(),
   setQuantity: z.number(),
-  setWeight: z.number(),
+  weight: z.number(),
   attempted: z.boolean(),
 });
 

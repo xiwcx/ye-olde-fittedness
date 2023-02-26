@@ -1,24 +1,38 @@
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, InputWrapper, Select } from "../inputs";
-import { TextInput } from "../inputs/TextInput";
+import { ControlledTextInput } from "../inputs/TextInput";
+import { exerciseSchema, ExerciseSchema } from "~/utils/shapes";
 
-const exerciseSchema = z.object({ title: z.string() });
-type ExerciseSchema = z.infer<typeof exerciseSchema>;
+type FormExerciseProps = {
+  defaultValues?: ExerciseSchema;
+  isSubmitting: boolean;
+  onSubmit: (data: ExerciseSchema) => void;
+};
 
-export const FormExercise = () => {
-  const { handleSubmit } = useForm<ExerciseSchema>({
+export const FormExercise = ({
+  defaultValues,
+  isSubmitting,
+  onSubmit,
+}: FormExerciseProps) => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ExerciseSchema>({
+    defaultValues,
     resolver: zodResolver(exerciseSchema),
   });
 
   return (
-    <form onSubmit={handleSubmit((d) => console.log(d))}>
-      <InputWrapper label="Title">
-        <TextInput />
+    <form onSubmit={handleSubmit((d) => onSubmit(d))}>
+      <InputWrapper label="Title" error={errors.title?.message}>
+        <ControlledTextInput control={control} name="title" />
       </InputWrapper>
 
-      <Button type="submit">Submit</Button>
+      <Button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Submitting..." : "Submit"}
+      </Button>
     </form>
   );
 };
