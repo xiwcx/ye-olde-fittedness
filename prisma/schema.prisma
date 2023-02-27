@@ -82,7 +82,7 @@ model Lift {
     date        DateTime
     repQuantity Int      @db.SmallInt
     setQuantity Int      @db.SmallInt
-    weight      Int      @db.SmallInt
+    weight      Int
 
     exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
     exerciseId String

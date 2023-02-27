@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, InputWrapper, Select } from "../inputs";
+import { Button, InputWrapper } from "../inputs";
 import { ControlledTextInput } from "../inputs/TextInput";
 import { exerciseSchema, ExerciseSchema } from "~/utils/shapes";
 

@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Lift" ALTER COLUMN "weight" SET DATA TYPE INTEGER;

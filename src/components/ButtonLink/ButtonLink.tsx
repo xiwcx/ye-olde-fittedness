@@ -1,9 +1,5 @@
 import Link, { LinkProps } from "next/link";
 
-type FC<Props> = {
-  children: React.ReactNode;
-} & Props;
-
 export const ButtonLink = ({
   children,
   ...linkProps

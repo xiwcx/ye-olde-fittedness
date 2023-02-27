@@ -8,6 +8,7 @@ export const exerciseRouter = createTRPCRouter({
       where: { userId: ctx.session.user.id },
     })
   ),
+
   getOne: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) =>
@@ -15,11 +16,13 @@ export const exerciseRouter = createTRPCRouter({
         where: { id: input.id, userId: ctx.session.user.id },
       })
     ),
+
   create: protectedProcedure.input(exerciseSchema).mutation(({ ctx, input }) =>
     ctx.prisma.exercise.create({
       data: { title: input.title, userId: ctx.session.user.id },
     })
   ),
+
   update: protectedProcedure
     .input(exerciseSchema.extend({ id: z.string() }))
     .mutation(({ ctx, input }) =>

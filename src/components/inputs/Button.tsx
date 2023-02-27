@@ -10,15 +10,13 @@ type ButtonProps = {
   onClick?: () => void;
 };
 
-export const Button = ({ children, disabled, onClick, type }: ButtonProps) => {
-  return (
-    <button
-      className="btn-primary btn"
-      disabled={disabled}
-      onClick={onClick}
-      type={type}
-    >
-      {children}
-    </button>
-  );
-};
+export const Button = ({ children, disabled, onClick, type }: ButtonProps) => (
+  <button
+    className="btn-primary btn"
+    disabled={disabled}
+    onClick={onClick}
+    type={type}
+  >
+    {children}
+  </button>
+);
