@@ -2,22 +2,31 @@ import { type NextPage } from "next";
 import { ButtonLink } from "~/components/ButtonLink";
 import { ListLayout } from "~/components/layouts";
 import { ListItem } from "~/components/ListItem";
+import { Pagination } from "~/components/Pagination";
 import { api } from "~/utils/api";
+import { usePaginationQueryParams } from "~/utils/hooks";
 
-const { useQuery } = api.exercise.getAll;
+const { useQuery } = api.exercise.getMany;
 
 const ListExercisesPage: NextPage = () => {
-  const { data, isLoading } = useQuery();
+  const { page, limit } = usePaginationQueryParams();
+  const { data, isLoading } = useQuery({
+    page,
+    limit,
+  });
 
   return (
     <ListLayout
-      CTA={<ButtonLink href="/exercises/add/">Add Exercise</ButtonLink>}
+      cta={<ButtonLink href="/exercises/add/">Add Exercise</ButtonLink>}
+      pagination={
+        <Pagination currentPage={page} totalPages={data?.totalPages} />
+      }
     >
       {isLoading ? (
         <div>Loading...</div>
       ) : (
         <ul>
-          {data?.map((exercise) => (
+          {data?.exercises?.map((exercise) => (
             <ListItem key={exercise.id}>
               <span>{exercise.title}</span>
 

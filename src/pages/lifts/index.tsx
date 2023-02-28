@@ -3,6 +3,7 @@ import { type NextPage } from "next";
 import { ButtonLink } from "~/components/ButtonLink";
 import { ListLayout } from "~/components/layouts";
 import { ListItem } from "~/components/ListItem";
+import { Pagination } from "~/components/Pagination";
 import { api } from "~/utils/api";
 
 const { useQuery } = api.lift.getAll;
@@ -11,7 +12,10 @@ const LiftPage: NextPage = () => {
   const { isLoading, data } = useQuery();
 
   return (
-    <ListLayout CTA={<ButtonLink href="/lifts/add/">Add Lift</ButtonLink>}>
+    <ListLayout
+      cta={<ButtonLink href="/lifts/add/">Add Lift</ButtonLink>}
+      pagination={<Pagination />}
+    >
       {isLoading ? (
         <div>Loading...</div>
       ) : (

@@ -1,18 +1,23 @@
 import { PropsWithChildren } from "~/utils/types";
+import { Pagination } from "../Pagination";
 
 type ListLayoutProps = {
-  CTA: React.ReactNode;
+  cta: React.ReactNode;
+  pagination: React.ReactNode;
 };
 
 export const ListLayout = ({
   children,
-  CTA,
+  cta,
+  pagination,
 }: PropsWithChildren<ListLayoutProps>) => {
   return (
     <>
-      <header className="mb-4 flex justify-end">{CTA}</header>
+      <header className="mb-4 flex justify-end">{cta}</header>
 
       {children}
+
+      <footer>{pagination}</footer>
     </>
   );
 };

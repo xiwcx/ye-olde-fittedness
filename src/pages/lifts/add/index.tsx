@@ -7,9 +7,11 @@ const { useMutation } = api.lift.create;
 
 const AddLiftPage: NextPage = () => {
   const { push } = useRouter();
-  const { mutate } = useMutation({ onSuccess: () => push("/lifts/") });
+  const { isLoading, mutate } = useMutation({
+    onSuccess: () => push("/lifts/"),
+  });
 
-  return <FormLift onSubmit={mutate} />;
+  return <FormLift isSubmitting={isLoading} onSubmit={mutate} />;
 };
 
 export default AddLiftPage;
