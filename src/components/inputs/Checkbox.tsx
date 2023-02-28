@@ -1,10 +1,15 @@
-import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
-
-type ButtonProps = {
+type CheckboxProps = {
   disabled?: boolean;
   checked?: boolean;
 };
 
-export const Checkbox = ({ disabled, checked }: ButtonProps) => {
-  return <input type="checkbox" checked={checked} className="checkbox" />;
+export const Checkbox = ({ disabled = false, checked }: CheckboxProps) => {
+  return (
+    <input
+      type="checkbox"
+      disabled={disabled}
+      checked={checked}
+      className="checkbox"
+    />
+  );
 };

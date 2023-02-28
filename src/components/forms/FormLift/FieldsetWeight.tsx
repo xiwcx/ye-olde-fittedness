@@ -1,10 +1,9 @@
-import { Control, useController } from "react-hook-form";
+import { type Control, useController } from "react-hook-form";
 import { Select, TextInput } from "~/components/inputs";
-import { LiftSchema } from "~/utils/shapes";
+import { type LiftSchema } from "~/utils/shapes";
 import convert from "convert";
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
-import { A, G } from "@mobily/ts-belt";
-import { isNonEmptyString } from "~/utils/helpers";
+import { useMemo, useState } from "react";
+import { A } from "@mobily/ts-belt";
 
 type FieldsetWeightProps = {
   control: Control<LiftSchema>;

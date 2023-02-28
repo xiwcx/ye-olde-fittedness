@@ -1,5 +1,4 @@
-import { PropsWithChildren } from "~/utils/types";
-import { Pagination } from "../Pagination";
+import type { PropsWithChildren } from "~/utils/types";
 
 type ListLayoutProps = {
   cta: React.ReactNode;

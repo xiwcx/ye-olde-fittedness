@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { createContext } from "react";
 import { isNonEmptyString } from "~/utils/helpers";
-import { PropsWithChildren } from "~/utils/types";
+import type { PropsWithChildren } from "~/utils/types";
 
 type InputWrapperProps = {
   error?: string;

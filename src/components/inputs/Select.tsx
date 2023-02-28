@@ -1,8 +1,13 @@
 import { useContext } from "react";
-import { Control, FieldValues, Path, useController } from "react-hook-form";
+import {
+  type Control,
+  type FieldValues,
+  type Path,
+  useController,
+} from "react-hook-form";
 import { clsx } from "clsx";
 import { InputWrapperContext } from "./InputWrapper";
-import { PropsWithChildren } from "~/utils/types";
+import type { PropsWithChildren } from "~/utils/types";
 
 type SelectProps = {
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;

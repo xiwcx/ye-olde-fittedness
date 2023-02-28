@@ -1,3 +1,3 @@
-export type PropsWithChildren<Props = {}> = {
+export type PropsWithChildren<Props = { key?: string }> = {
   children: React.ReactNode;
 } & Props;

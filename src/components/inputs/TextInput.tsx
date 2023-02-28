@@ -1,7 +1,12 @@
 import { G } from "@mobily/ts-belt";
 import clsx from "clsx";
 import { useContext } from "react";
-import { Control, FieldValues, Path, useController } from "react-hook-form";
+import {
+  type Control,
+  type FieldValues,
+  type Path,
+  useController,
+} from "react-hook-form";
 import { InputWrapperContext } from "./InputWrapper";
 
 type TextInputProps = {
@@ -62,10 +67,10 @@ const setValue = (
 
 const getValue = (value: unknown): string => {
   // @ts-expect-error - gudard narrows to `never` for some reason, issue filed: https://github.com/mobily/ts-belt/issues/73
-  if (G.isDate(value)) return value.toISOString().split("T")[0];
+  if (G.isDate(value)) return value.toISOString().split("T")[0]; // eslint-disable-line -- same deal
   if (G.isNumber(value)) return value.toString();
 
-  return String(value);
+  return String(value || "");
 };
 
 export const ControlledTextInput = <TFieldValues extends FieldValues>({

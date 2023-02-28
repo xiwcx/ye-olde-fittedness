@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, InputWrapper } from "../inputs";
 import { ControlledTextInput } from "../inputs/TextInput";
-import { exerciseSchema, ExerciseSchema } from "~/utils/shapes";
+import { exerciseSchema, type ExerciseSchema } from "~/utils/shapes";
 
 type FormExerciseProps = {
   defaultValues?: ExerciseSchema;
@@ -25,7 +25,7 @@ export const FormExercise = ({
   });
 
   return (
-    <form onSubmit={handleSubmit((d) => onSubmit(d))}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <InputWrapper label="Title" error={errors.title?.message}>
         <ControlledTextInput control={control} name="title" />
       </InputWrapper>

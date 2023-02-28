@@ -10,7 +10,7 @@ type PageProps = {
 const Page = ({ page, currentPage }: PageProps) => (
   <Link
     className={clsx("btn", { "btn-active": page === currentPage })}
-    href={{ query: { skip: page } }}
+    href={{ query: { page } }}
   >
     {page}
   </Link>

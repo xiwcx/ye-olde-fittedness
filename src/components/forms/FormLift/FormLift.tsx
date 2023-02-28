@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { LiftSchema, liftSchema } from "~/utils/shapes";
+import { type LiftSchema, liftSchema } from "~/utils/shapes";
 import {
   Checkbox,
   InputWrapper,
@@ -11,7 +11,7 @@ import {
 import { SelectExercise } from "./SelectExercise";
 import { A } from "@mobily/ts-belt";
 import { FieldsetWeight } from "./FieldsetWeight";
-import { SetOptional } from "type-fest";
+import { type SetOptional } from "type-fest";
 import { DevTool } from "@hookform/devtools";
 
 type LiftSchemaWithOptionalExercise = SetOptional<LiftSchema, "exerciseId">;

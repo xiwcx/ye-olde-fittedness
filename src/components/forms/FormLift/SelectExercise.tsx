@@ -1,7 +1,7 @@
-import { Control, useController } from "react-hook-form";
+import { type Control, useController } from "react-hook-form";
 import { Select } from "~/components/inputs";
 import { api } from "~/utils/api";
-import { LiftSchema } from "~/utils/shapes";
+import type { LiftSchema } from "~/utils/shapes";
 
 type SelectExerciseProps = {
   control: Control<LiftSchema>;
