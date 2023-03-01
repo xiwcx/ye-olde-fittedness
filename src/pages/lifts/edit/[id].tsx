@@ -15,7 +15,7 @@ const EditLiftPage: NextPage = () => {
   const id = getStringFromQueryParam(query.id);
   const { isLoading, data } = useQuery(id, { cacheTime: 0 });
   const { isLoading: isSubmitting, mutate } = useMutation({
-    onSuccess: () => push("/lifts/"),
+    onSuccess: () => push("/"),
   });
 
   return isLoading ? (

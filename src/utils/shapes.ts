@@ -5,7 +5,7 @@ export const paginationSchema = z.object({
   limit: z.number(),
 });
 
-export const exerciseSchema = z.object({ title: z.string() });
+export const exerciseSchema = z.object({ name: z.string() });
 export type ExerciseSchema = z.infer<typeof exerciseSchema>;
 
 export const liftSchema = z.object({

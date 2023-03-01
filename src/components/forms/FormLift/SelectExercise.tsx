@@ -25,7 +25,7 @@ export const SelectExercise = ({ control }: SelectExerciseProps) => {
 
       {data?.map((exercise) => (
         <option key={exercise.id} value={exercise.id}>
-          {exercise.title}
+          {exercise.name}
         </option>
       ))}
     </Select>

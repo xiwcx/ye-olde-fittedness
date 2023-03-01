@@ -1,17 +1,40 @@
 import { A } from "@mobily/ts-belt";
+import type { Exercise } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { caseInsensitiveCompare } from "~/utils/helpers";
 import { getTotalPages } from "~/utils/routers";
 import { exerciseSchema, paginationSchema } from "~/utils/shapes";
 
+/**
+ * Prisma supports case-insensitive filtering, but not sorting.
+ * There is an open issue since 2020: https://github.com/prisma/prisma/issues/5068
+ *
+ * There is a pgsql-specific native mappint, `@db.Citext`, but that relies upon
+ * the `citext` extension, which in turn relies upon the a prisma preview
+ * feature (`postgresqlExtensions`). Which either doesn't work or doesn't work with
+ * Railway provisioned databases.
+ *
+ * So maybe revisit this if there are enough exercises stored that this sort becomes
+ * inefficient.
+ */
+const getSortedExercises = (exercises: Exercise[]) =>
+  A.sort(exercises, (a, b) => caseInsensitiveCompare(a.name, b.name));
+
 export const exerciseRouter = createTRPCRouter({
-  getAll: protectedProcedure.query(({ ctx }) =>
-    ctx.prisma.exercise.findMany({
-      where: { userId: ctx.session.user.id },
-      orderBy: { title: "asc" },
+  create: protectedProcedure.input(exerciseSchema).mutation(({ ctx, input }) =>
+    ctx.prisma.exercise.create({
+      data: { name: input.name, userId: ctx.session.user.id },
     })
   ),
+
+  getAll: protectedProcedure.query(async ({ ctx }) => {
+    const exercises = await ctx.prisma.exercise.findMany({
+      where: { userId: ctx.session.user.id },
+    });
+
+    return getSortedExercises(exercises);
+  }),
 
   getMany: protectedProcedure
     .input(paginationSchema)
@@ -25,25 +48,9 @@ export const exerciseRouter = createTRPCRouter({
       });
       const count = await ctx.prisma.exercise.count({ where });
 
-      /**
-       * Prisma supports case-insensitive filtering, but not sorting.
-       * There is an open issue since 2020: https://github.com/prisma/prisma/issues/5068
-       *
-       * There is a pgsql-specific native mappint, `@db.Citext`, but that relies upon
-       * the `citext` extension, which in turn relies upon the a prisma preview
-       * feature (`postgresqlExtensions`). Which either doesn't work or doesn't work with
-       * Railway provisioned databases.
-       *
-       * So maybe revisit this if there are enough exercises stored that this sort becomes
-       * inefficient.
-       */
-      const sortedExercises = A.sort(exercises, (a, b) =>
-        caseInsensitiveCompare(a.title, b.title)
-      );
-
       return {
         count,
-        exercises: sortedExercises,
+        exercises: getSortedExercises(exercises),
         page,
         limit,
         totalPages: getTotalPages(limit, count),
@@ -57,12 +64,6 @@ export const exerciseRouter = createTRPCRouter({
         where: { id: input.id, userId: ctx.session.user.id },
       })
     ),
-
-  create: protectedProcedure.input(exerciseSchema).mutation(({ ctx, input }) =>
-    ctx.prisma.exercise.create({
-      data: { title: input.title, userId: ctx.session.user.id },
-    })
-  ),
 
   update: protectedProcedure
     .input(exerciseSchema.extend({ id: z.string() }))

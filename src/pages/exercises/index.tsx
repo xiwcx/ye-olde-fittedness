@@ -28,7 +28,7 @@ const ListExercisesPage: NextPage = () => {
         <ul>
           {data?.exercises?.map((exercise) => (
             <ListItem key={exercise.id}>
-              <span>{exercise.title}</span>
+              <span>{exercise.name}</span>
 
               <ButtonLink href={`/exercises/edit/${exercise.id}/`}>
                 Edit

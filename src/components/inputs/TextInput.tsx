@@ -1,6 +1,7 @@
 import { G } from "@mobily/ts-belt";
 import clsx from "clsx";
 import { useContext } from "react";
+import { format } from "date-fns";
 import {
   type Control,
   type FieldValues,
@@ -12,7 +13,7 @@ import { InputWrapperContext } from "./InputWrapper";
 type TextInputProps = {
   className?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  type?: "text" | "number" | "date";
+  type?: "text" | "number" | "datetime-local";
   value?: string;
 };
 
@@ -56,7 +57,7 @@ const setValue = (
   value: string | number | Date
 ) => {
   switch (type) {
-    case "date":
+    case "datetime-local":
       return new Date(value);
     case "number":
       return Number(value);
@@ -66,8 +67,7 @@ const setValue = (
 };
 
 const getValue = (value: unknown): string => {
-  // @ts-expect-error - gudard narrows to `never` for some reason, issue filed: https://github.com/mobily/ts-belt/issues/73
-  if (G.isDate(value)) return value.toISOString().split("T")[0]; // eslint-disable-line -- same deal
+  if (G.isDate(value)) return format(value, "yyyy-MM-dd'T'HH:mm");
   if (G.isNumber(value)) return value.toString();
 
   return String(value || "");

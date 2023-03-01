@@ -26,8 +26,8 @@ export const FormExercise = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <InputWrapper label="Title" error={errors.title?.message}>
-        <ControlledTextInput control={control} name="title" />
+      <InputWrapper label="Title" error={errors.name?.message}>
+        <ControlledTextInput control={control} name="name" />
       </InputWrapper>
 
       <Button type="submit" disabled={isSubmitting}>

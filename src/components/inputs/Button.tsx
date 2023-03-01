@@ -1,3 +1,5 @@
+import { S } from "@mobily/ts-belt";
+import clsx from "clsx";
 import type { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 
 type ButtonProps = {
@@ -8,15 +10,28 @@ type ButtonProps = {
     HTMLButtonElement
   >["type"];
   onClick?: () => void;
+  btnTheme?: "" | "primary" | "secondary" | "accent" | "ghost" | "link";
 };
 
-export const Button = ({ children, disabled, onClick, type }: ButtonProps) => (
-  <button
-    className="btn-primary btn"
-    disabled={disabled}
-    onClick={onClick}
-    type={type}
-  >
-    {children}
-  </button>
-);
+export const Button = ({
+  btnTheme = "",
+  children,
+  disabled,
+  onClick,
+  type,
+}: ButtonProps) => {
+  const buttonClasses = clsx("btn", {
+    [`btn-${btnTheme}`]: S.isNotEmpty(btnTheme),
+  });
+
+  return (
+    <button
+      className={buttonClasses}
+      disabled={disabled}
+      onClick={onClick}
+      type={type}
+    >
+      {children}
+    </button>
+  );
+};

@@ -53,7 +53,11 @@ export const FormLift = ({
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <InputWrapper label="Date" error={errors.date?.message}>
-        <ControlledTextInput control={control} name="date" type="date" />
+        <ControlledTextInput
+          control={control}
+          name="date"
+          type="datetime-local"
+        />
       </InputWrapper>
 
       <InputWrapper label="Exercise" error={errors.exerciseId?.message}>

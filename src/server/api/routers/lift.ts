@@ -13,6 +13,7 @@ export const liftRouter = createTRPCRouter({
     ctx.prisma.lift.findMany({
       where: { userId: ctx.session.user.id },
       include: { exercise: true },
+      orderBy: { date: "desc" },
     })
   ),
 
