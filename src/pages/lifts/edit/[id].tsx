@@ -1,7 +1,8 @@
 import { G } from "@mobily/ts-belt";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
-import { FormLift } from "~/components/forms/FormLift/FormLift";
+import { FormLift } from "~/components/forms/FormLift";
+import { Loading } from "~/components/Loading";
 import { api } from "~/utils/api";
 import { getStringFromQueryParam } from "~/utils/helpers";
 
@@ -19,7 +20,7 @@ const EditLiftPage: NextPage = () => {
   });
 
   return isLoading ? (
-    <div>Loading...</div>
+    <Loading />
   ) : (
     <FormLift
       isSubmitting={isSubmitting}

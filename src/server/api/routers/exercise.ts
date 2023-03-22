@@ -1,10 +1,14 @@
-import { A } from "@mobily/ts-belt";
+import { A, F, pipe } from "@mobily/ts-belt";
 import type { Exercise } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { caseInsensitiveCompare } from "~/utils/helpers";
 import { getTotalPages } from "~/utils/routers";
-import { exerciseSchema, paginationSchema } from "~/utils/shapes";
+import {
+  exerciseSchema,
+  paginationInputSchema,
+  type PaginationReturnSchema,
+} from "~/utils/shapes";
 
 /**
  * Prisma supports case-insensitive filtering, but not sorting.
@@ -19,7 +23,11 @@ import { exerciseSchema, paginationSchema } from "~/utils/shapes";
  * inefficient.
  */
 const getSortedExercises = (exercises: Exercise[]) =>
-  A.sort(exercises, (a, b) => caseInsensitiveCompare(a.name, b.name));
+  pipe(
+    exercises,
+    A.sort((a, b) => caseInsensitiveCompare(a.name, b.name)),
+    F.toMutable
+  );
 
 export const exerciseRouter = createTRPCRouter({
   create: protectedProcedure.input(exerciseSchema).mutation(({ ctx, input }) =>
@@ -37,25 +45,27 @@ export const exerciseRouter = createTRPCRouter({
   }),
 
   getMany: protectedProcedure
-    .input(paginationSchema)
-    .query(async ({ ctx, input: { page, limit } }) => {
-      const skip = (page - 1) * limit;
-      const where = { userId: ctx.session.user.id };
-      const exercises = await ctx.prisma.exercise.findMany({
-        skip,
-        take: limit,
-        where,
-      });
-      const count = await ctx.prisma.exercise.count({ where });
+    .input(paginationInputSchema)
+    .query<PaginationReturnSchema<{ exercises: Exercise[] }>>(
+      async ({ ctx, input: { page, limit } }) => {
+        const skip = (page - 1) * limit;
+        const where = { userId: ctx.session.user.id };
+        const exercises = await ctx.prisma.exercise.findMany({
+          skip,
+          take: limit,
+          where,
+        });
+        const count = await ctx.prisma.exercise.count({ where });
 
-      return {
-        count,
-        exercises: getSortedExercises(exercises),
-        page,
-        limit,
-        totalPages: getTotalPages(limit, count),
-      };
-    }),
+        return {
+          count,
+          exercises: getSortedExercises(exercises),
+          page,
+          limit,
+          totalPages: getTotalPages(limit, count),
+        };
+      }
+    ),
 
   getOne: protectedProcedure
     .input(z.object({ id: z.string() }))

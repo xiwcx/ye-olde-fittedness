@@ -1,5 +1,6 @@
 import { type Control, useController } from "react-hook-form";
 import { Select } from "~/components/inputs";
+import { Loading } from "~/components/Loading";
 import { api } from "~/utils/api";
 import type { LiftSchema } from "~/utils/shapes";
 
@@ -16,7 +17,7 @@ export const SelectExercise = ({ control }: SelectExerciseProps) => {
   const { data, isLoading } = useQuery();
 
   return isLoading ? (
-    <p>loading...</p>
+    <Loading />
   ) : (
     <Select onChange={onChange} defaultValue={value || "default"}>
       <option disabled value="default">
