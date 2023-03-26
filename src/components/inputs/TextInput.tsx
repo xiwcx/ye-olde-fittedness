@@ -1,6 +1,10 @@
 import { G } from "@mobily/ts-belt";
 import clsx from "clsx";
-import { useContext } from "react";
+import {
+  type DetailedHTMLProps,
+  type InputHTMLAttributes,
+  useContext,
+} from "react";
 import { format } from "date-fns";
 import {
   type Control,
@@ -10,12 +14,39 @@ import {
 } from "react-hook-form";
 import { InputWrapperContext } from "./InputWrapper";
 
+type InputType = DetailedHTMLProps<
+  InputHTMLAttributes<HTMLInputElement>,
+  HTMLInputElement
+>["type"];
+
+type NarrowedInputType = Extract<
+  InputType,
+  "datetime-local" | "number" | "text"
+>;
+
 type TextInputProps = {
   className?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  type?: "text" | "number" | "datetime-local";
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  type?: NarrowedInputType;
   value?: string;
 };
+
+const inputTypes = new Map<NarrowedInputType, NarrowedInputType>([
+  ["text", "text"],
+  ["number", "text"],
+  ["datetime-local", "datetime-local"],
+]);
+
+type InputMode = DetailedHTMLProps<
+  InputHTMLAttributes<HTMLInputElement>,
+  HTMLInputElement
+>["inputMode"];
+
+const inputModes = new Map<InputType, InputMode>([
+  ["text", undefined],
+  ["number", "numeric"],
+  ["datetime-local", undefined],
+]);
 
 export const TextInput = ({
   className,
@@ -36,8 +67,9 @@ export const TextInput = ({
   return (
     <input
       className={inputClassnames}
-      onChange={onChange}
-      type={type}
+      inputMode={inputModes.get(type)}
+      onChange={(e) => onChange(e)}
+      type={inputTypes.get(type)}
       value={value}
     />
   );
