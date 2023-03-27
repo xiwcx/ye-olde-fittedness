@@ -11,6 +11,7 @@
     "type-check": "tsc --noEmit",
     "prepare": "husky install",
     "prisma:generate": "prisma generate",
+    "test:acceptance": "playwright test --config=playwright.config.ts",
     "test": "jest"
   },
   "dependencies": {
@@ -40,6 +41,7 @@
   },
   "devDependencies": {
     "@hookform/devtools": "^4.3.0",
+    "@playwright/test": "^1.32.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@types/eslint": "^8.21.1",
