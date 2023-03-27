@@ -10,15 +10,13 @@ import {
 } from "../../inputs";
 import { SelectExercise } from "./SelectExercise";
 import { A } from "@mobily/ts-belt";
-import { FieldsetWeight } from "./FieldsetWeight";
-import { type SetOptional } from "type-fest";
+import { ControlledFieldsetWeight } from "./FieldsetWeight";
 import { DevTool } from "@hookform/devtools";
 
-type LiftSchemaWithOptionalExercise = SetOptional<LiftSchema, "exerciseId">;
+type PartialLiftSchema = Partial<LiftSchema>;
 
-const defaultValues: LiftSchemaWithOptionalExercise = {
+const defaultValues: PartialLiftSchema = {
   attempted: false,
-  date: new Date(),
   repQuantity: 10,
   setQuantity: 5,
   weight: 0,
@@ -31,7 +29,7 @@ const numberOptionElements = A.range(1, 20).map((n) => (
 ));
 
 type FormLiftProps = {
-  initialValues?: LiftSchemaWithOptionalExercise;
+  initialValues?: PartialLiftSchema;
   isSubmitting: boolean;
   onSubmit: (d: LiftSchema) => void;
 };
@@ -77,7 +75,7 @@ export const FormLift = ({
       </InputWrapper>
 
       <InputWrapper label="Weight" error={errors.weight?.message}>
-        <FieldsetWeight control={control} />
+        <ControlledFieldsetWeight control={control} />
       </InputWrapper>
 
       <InputWrapper label="Attempted">

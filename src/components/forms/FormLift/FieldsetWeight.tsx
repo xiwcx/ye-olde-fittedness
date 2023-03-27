@@ -5,7 +5,7 @@ import convert from "convert";
 import { useMemo, useState } from "react";
 import { A } from "@mobily/ts-belt";
 
-type FieldsetWeightProps = {
+type ControlledFieldsetWeightProps = {
   control: Control<LiftSchema>;
 };
 
@@ -20,25 +20,33 @@ const weightOptionElements = weightOptions.map((w) => (
 ));
 const isWeightOption = (o: unknown): o is WeightOption =>
   A.includes(weightOptions, o);
-const getNewWeightInGrams = (value: string, unit: WeightOption) =>
-  Math.round(convert(Number(value), unit).to(storedUnit));
 
-export const FieldsetWeight = ({ control }: FieldsetWeightProps) => {
-  const {
-    field: { onChange, value: weightInGrams },
-  } = useController({ name: "weight", control });
+type FieldsetWeightProps = {
+  onChange: (weightInGrams: number) => void;
+  weightInGrams: number;
+};
+
+const convertFromGrams = (weightInGrams: number | string, unit: WeightOption) =>
+  Math.round(convert(Number(weightInGrams), storedUnit).to(unit));
+const convertToGrams = (weight: number | string, unit: WeightOption) =>
+  Math.round(convert(Number(weight), unit).to(storedUnit));
+
+export const FieldsetWeight = ({
+  onChange,
+  weightInGrams = 0,
+}: FieldsetWeightProps) => {
   const [unit, setUnit] = useState<WeightOption>("lb");
   const displayWeight = useMemo(
-    () => String(Math.round(convert(weightInGrams, storedUnit).to(unit))),
+    () => String(convertFromGrams(weightInGrams, unit)),
     [unit, weightInGrams]
   );
 
   return (
     <fieldset className="grid grid-cols-3 gap-4">
       <TextInput
-        onChange={({ target: { value = "0" } }) => {
-          onChange(getNewWeightInGrams(value, unit));
-        }}
+        onChange={({ target: { value = "0" } }) =>
+          onChange(convertToGrams(Number(value), unit))
+        }
         className="col-span-2"
         value={displayWeight}
         type="number"
@@ -48,13 +56,23 @@ export const FieldsetWeight = ({ control }: FieldsetWeightProps) => {
         onChange={({ target: { value } }) => {
           if (isWeightOption(value)) {
             setUnit(value);
-            onChange(getNewWeightInGrams(displayWeight, value));
+            onChange(convertToGrams(displayWeight, value));
           }
         }}
-        defaultValue={"default"}
+        defaultValue={unit}
       >
         {weightOptionElements}
       </Select>
     </fieldset>
   );
+};
+
+export const ControlledFieldsetWeight = ({
+  control,
+}: ControlledFieldsetWeightProps) => {
+  const {
+    field: { onChange, value },
+  } = useController({ name: "weight", control });
+
+  return <FieldsetWeight onChange={onChange} weightInGrams={value} />;
 };
