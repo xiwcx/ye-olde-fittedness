@@ -1,4 +1,5 @@
 import { type NextPage } from "next";
+import { RiEditBoxLine } from "react-icons/ri";
 import { ButtonLink } from "~/components/ButtonLink";
 import { ListLayout } from "~/components/layouts";
 import { ListItem } from "~/components/ListItem";
@@ -32,7 +33,7 @@ const ListExercisesPage: NextPage = () => {
               <span>{exercise.name}</span>
 
               <ButtonLink href={`/exercises/edit/${exercise.id}/`}>
-                Edit
+                <RiEditBoxLine />
               </ButtonLink>
             </ListItem>
           ))}
