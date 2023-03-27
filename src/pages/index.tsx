@@ -9,6 +9,7 @@ import { Pagination } from "~/components/Pagination";
 import { api } from "~/utils/api";
 import { usePaginationQueryParams } from "~/utils/hooks";
 import { convertFromGrams } from "~/utils/weight";
+import { RiEditBoxLine } from "react-icons/ri";
 
 const { useQuery } = api.lift.getMany;
 
@@ -18,17 +19,17 @@ type LiftWithExerciseProps = {
 
 const LiftWithExercise = ({ lift }: LiftWithExerciseProps) => {
   return (
-    <p className="grid grid-cols-2 gap-8">
+    <p className="grid flex-grow grid-cols-2 gap-8 md:grid-cols-3">
       <span className="col-span-1 flex flex-col">
         <span className="font-bold">{format(lift.date, "yyyy-MM-dd")}</span>{" "}
         {lift.exercise.name}
       </span>
 
-      <span className="col-span-1 flex flex-col">
+      <span className="col-span-1 flex flex-col md:grid-cols-2">
         <span className="font-bold">
           {convertFromGrams(lift.weight, "lb")} lb
         </span>
-        {lift.setQuantity} x {lift.repQuantity}
+        {lift.setQuantity} x {lift.repQuantity} {lift.attempted && "(A)"}
       </span>
     </p>
   );
@@ -52,7 +53,9 @@ const HomePage: NextPage = () => {
           {data?.lifts?.map((lift) => (
             <ListItem key={lift.id}>
               <LiftWithExercise lift={lift} />
-              <ButtonLink href={`/lifts/edit/${lift.id}`}>Edit Lift</ButtonLink>
+              <ButtonLink href={`/lifts/edit/${lift.id}`}>
+                <RiEditBoxLine />
+              </ButtonLink>
             </ListItem>
           ))}
         </ul>
