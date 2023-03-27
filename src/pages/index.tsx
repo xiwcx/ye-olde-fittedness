@@ -8,6 +8,7 @@ import { Loading } from "~/components/Loading";
 import { Pagination } from "~/components/Pagination";
 import { api } from "~/utils/api";
 import { usePaginationQueryParams } from "~/utils/hooks";
+import { convertFromGrams } from "~/utils/weight";
 
 const { useQuery } = api.lift.getMany;
 
@@ -17,15 +18,17 @@ type LiftWithExerciseProps = {
 
 const LiftWithExercise = ({ lift }: LiftWithExerciseProps) => {
   return (
-    <p className="grid grid-cols-3 gap-8">
+    <p className="grid grid-cols-2 gap-8">
       <span className="col-span-1 flex flex-col">
         <span className="font-bold">{format(lift.date, "yyyy-MM-dd")}</span>{" "}
         {lift.exercise.name}
       </span>
 
-      <span className="col-span-2 flex flex-col">
-        <span className="font-bold">{lift.weight} kg</span>
-        {lift.setQuantity} reps
+      <span className="col-span-1 flex flex-col">
+        <span className="font-bold">
+          {convertFromGrams(lift.weight, "lb")} lb
+        </span>
+        {lift.setQuantity} x {lift.repQuantity}
       </span>
     </p>
   );
