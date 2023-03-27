@@ -1,6 +1,12 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { liftSchema } from "~/utils/shapes";
+import { getTotalPages } from "~/utils/routers";
+import {
+  type LiftWithExercise,
+  type PaginationReturnSchema,
+  liftSchema,
+  paginationInputSchema,
+} from "~/utils/shapes";
 
 export const liftRouter = createTRPCRouter({
   create: protectedProcedure.input(liftSchema).mutation(({ ctx, input }) =>
@@ -9,13 +15,30 @@ export const liftRouter = createTRPCRouter({
     })
   ),
 
-  getAll: protectedProcedure.query(({ ctx }) =>
-    ctx.prisma.lift.findMany({
-      where: { userId: ctx.session.user.id },
+  getMany: protectedProcedure.input(paginationInputSchema).query<
+    PaginationReturnSchema<{
+      lifts: LiftWithExercise[];
+    }>
+  >(async ({ ctx, input: { page, limit } }) => {
+    const skip = (page - 1) * limit;
+    const where = { userId: ctx.session.user.id };
+    const lifts = await ctx.prisma.lift.findMany({
+      skip,
+      take: limit,
+      where,
       include: { exercise: true },
       orderBy: { date: "desc" },
-    })
-  ),
+    });
+    const count = await ctx.prisma.lift.count({ where });
+
+    return {
+      count,
+      lifts,
+      page,
+      limit,
+      totalPages: getTotalPages(limit, count),
+    };
+  }),
 
   getOne: protectedProcedure.input(z.string()).query(({ ctx, input }) =>
     ctx.prisma.lift.findUnique({

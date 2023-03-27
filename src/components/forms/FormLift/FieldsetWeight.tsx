@@ -1,35 +1,29 @@
 import { type Control, useController } from "react-hook-form";
 import { Select, TextInput } from "~/components/inputs";
 import { type LiftSchema } from "~/utils/shapes";
-import convert from "convert";
 import { useMemo, useState } from "react";
-import { A } from "@mobily/ts-belt";
+import {
+  convertFromGrams,
+  convertToGrams,
+  isWeightOption,
+  WEIGHT_OPTIONS,
+  type WeightOption,
+} from "~/utils/weight";
 
 type ControlledFieldsetWeightProps = {
   control: Control<LiftSchema>;
 };
 
-type WeightOption = (typeof weightOptions)[number];
-
-const storedUnit = "gram";
-const weightOptions = ["lb", "kg"] as const;
-const weightOptionElements = weightOptions.map((w) => (
+const weightOptionElements = WEIGHT_OPTIONS.map((w) => (
   <option value={w} key={w}>
     {w}
   </option>
 ));
-const isWeightOption = (o: unknown): o is WeightOption =>
-  A.includes(weightOptions, o);
 
 type FieldsetWeightProps = {
   onChange: (weightInGrams: number) => void;
   weightInGrams: number;
 };
-
-const convertFromGrams = (weightInGrams: number | string, unit: WeightOption) =>
-  Math.round(convert(Number(weightInGrams), storedUnit).to(unit));
-const convertToGrams = (weight: number | string, unit: WeightOption) =>
-  Math.round(convert(Number(weight), unit).to(storedUnit));
 
 export const FieldsetWeight = ({
   onChange,

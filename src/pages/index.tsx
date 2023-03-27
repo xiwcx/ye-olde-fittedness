@@ -1,33 +1,57 @@
-import { format } from "date-fns";
 import { type NextPage } from "next";
+import { type LiftWithExercise } from "~/utils/shapes";
+import { format } from "date-fns";
 import { ButtonLink } from "~/components/ButtonLink";
 import { ListLayout } from "~/components/layouts";
 import { ListItem } from "~/components/ListItem";
+import { Loading } from "~/components/Loading";
 import { Pagination } from "~/components/Pagination";
 import { api } from "~/utils/api";
+import { usePaginationQueryParams } from "~/utils/hooks";
+import { convertFromGrams } from "~/utils/weight";
 
-const { useQuery } = api.lift.getAll;
+const { useQuery } = api.lift.getMany;
+
+type LiftWithExerciseProps = {
+  lift: LiftWithExercise;
+};
+
+const LiftWithExercise = ({ lift }: LiftWithExerciseProps) => {
+  return (
+    <p className="grid grid-cols-2 gap-8">
+      <span className="col-span-1 flex flex-col">
+        <span className="font-bold">{format(lift.date, "yyyy-MM-dd")}</span>{" "}
+        {lift.exercise.name}
+      </span>
+
+      <span className="col-span-1 flex flex-col">
+        <span className="font-bold">
+          {convertFromGrams(lift.weight, "lb")} lb
+        </span>
+        {lift.setQuantity} x {lift.repQuantity}
+      </span>
+    </p>
+  );
+};
 
 const HomePage: NextPage = () => {
-  const { isLoading, data } = useQuery();
+  const { page, limit } = usePaginationQueryParams();
+  const { isLoading, data } = useQuery({ page, limit });
 
   return (
     <ListLayout
       cta={<ButtonLink href="/lifts/add/">Add Lift</ButtonLink>}
-      pagination={<Pagination />}
+      pagination={
+        <Pagination currentPage={page} totalPages={data?.totalPages} />
+      }
     >
       {isLoading ? (
-        <div>Loading...</div>
+        <Loading />
       ) : (
         <ul>
-          {data?.map((lift) => (
+          {data?.lifts?.map((lift) => (
             <ListItem key={lift.id}>
-              <p>
-                <span className="font-bold">
-                  {format(lift.date, "yyyy-MM-dd")}
-                </span>{" "}
-                {lift.exercise.name}
-              </p>
+              <LiftWithExercise lift={lift} />
               <ButtonLink href={`/lifts/edit/${lift.id}`}>Edit Lift</ButtonLink>
             </ListItem>
           ))}

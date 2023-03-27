@@ -2,6 +2,7 @@ import { type NextPage } from "next";
 import { ButtonLink } from "~/components/ButtonLink";
 import { ListLayout } from "~/components/layouts";
 import { ListItem } from "~/components/ListItem";
+import { Loading } from "~/components/Loading";
 import { Pagination } from "~/components/Pagination";
 import { api } from "~/utils/api";
 import { usePaginationQueryParams } from "~/utils/hooks";
@@ -23,7 +24,7 @@ const ListExercisesPage: NextPage = () => {
       }
     >
       {isLoading ? (
-        <div>Loading...</div>
+        <Loading />
       ) : (
         <ul>
           {data?.exercises?.map((exercise) => (
